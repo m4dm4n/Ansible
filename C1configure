@@ -1,0 +1,111 @@
+#file: C1vboxconfiguration.yml
+---
+- hosts: ws08lb32
+  gather_facts: yes
+
+  tasks:
+#  - name: Install latest apps
+#    win_chocolatey:
+#      name:
+#      - putty
+#      - firefox
+#      - wireshark
+#      state: latest
+#    become: yes
+#    become_method: runas
+#    become_user: SYSTEM
+
+# Here we create temp directory for some working files
+  - name: Create Temp directory
+    win_file:
+      path: C:\Temp
+      state: directory
+
+  - name: Copy Virtualbox extension pack Version specific via WIN_COPY module
+    win_copy:
+      src: \\192.168.70.252\NASTAVA\Oracle_VM_VirtualBox_Extension_Pack-6.0.12.vbox-extpack
+      dest: C:\Temp\Oracle_VM_VirtualBox_Extension_Pack-6.0.12.vbox-extpack
+      remote_src: yes
+
+  - name: Copy vbox_deleteVMs.ps1 script to C:\Temp
+    win_copy:
+      src: \\192.168.70.252\NASTAVA\Skripte\Priprema C1 particije\vbox_deleteVMs.ps1
+      dest: C:\Temp\vbox_deleteVMs.ps1
+      remote_src: yes
+
+  - name: Install Virtualbox Version specific
+    win_chocolatey:
+      name: virtualbox
+      version: '6.0.12'
+
+  - name: Install Virtualbox extension pack Version specific
+    win_shell: echo y | & "c:\program files\oracle\virtualbox\vboxmanage.exe" extpack install --replace C:\Temp\Oracle_VM_VirtualBox_Extension_Pack-6.0.12.vbox-extpack
+    become: yes
+    become_method: runas
+    become_user: SYSTEM
+    register: vboxextension
+- debug:
+      msg: "{{ vboxextension }}"
+
+  - name: Copy PSVirtualBox PowerShell Virtualbox module
+    win_copy:
+      src: \\192.168.70.252\Nastava\Skripte\Priprema C1 particije\PSVirtualBox
+      dest: C:\Program Files\WindowsPowerShell\Modules
+      remote_src: yes
+
+  - name: Import PSVirtualBox PowerShell module
+    win_psmodule:
+      name: PSVirtualBox
+      state: present
+
+  - name: Delete All Existing VMs
+    win_shell: C:\Temp\vbox_deleteVMs.ps1 > C:\Temp\vbox_deleteVMsLOG.txt
+    tags: deletevms
+
+  - name: Format vSEC partition
+#   FOR Server 2012+ or Windows8+
+#    win_format:
+#      label: vSEC
+#      file_system: ntfs
+#      new_label: vSEC
+
+#   FOR Windows7 only
+    win_shell: echo vSEC | & format F{{ ":" }} /Q  /V{{ ":" }}vSEC /FS{{ ":" }}ntfs /y
+    tags: format
+
+  - name: Create Virtualbox folder
+    win_file:
+      path: F:\VirtualBox
+      state: directory
+    tags: vboxfolder
+
+  - name: Configure VirtualBox machine folder
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" setproperty machinefolder F:\VirtualBox\
+    tags: vboxconfigure
+
+  - name: Change VirtualBox language to english
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" setextradata global "GUI/LanguageID" "C"
+    tags: vboxlanguage
+
+  - name: Create Windows Client VM diskless
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" createvm --name "Windows7" --ostype Windows7_64 --register
+
+  - name: Create Windows Server VM diskless
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" createvm --name "Server2012" --ostype Windows2012_64 --register
+
+  - name: Create Linux Desktop VM diskless
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" createvm --name "LinuxMint" --ostype Ubuntu_64 --register
+
+  - name: Create Linux Alpine VM diskless
+    win_shell: echo "" | & "c:\program files\oracle\virtualbox\vboxmanage.exe" createvm --name "AlpineLinux" --ostype Linux26_64 --register
+
+  - name: Copy Virtual HDDs to VM folders
+    win_copy:
+      src: \\192.168.70.250\4H\Konfiguriranje racunalnih mreza i servisa\Virtualni strojevi\Windows_7\Windows7.vhd
+      dest: F:\VirtualBox\Windows7\Windows7.vhd
+      remote_src: yes
+    tags: win7copy
+
+#  - name: Register new Virtual HDDs to VMs
+
+
