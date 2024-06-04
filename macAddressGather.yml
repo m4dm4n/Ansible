@@ -1,1 +1,10 @@
-
+---
+- hosts: all
+  vars:
+    ansible_port: 22
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    ansible_ssh_retries: 3
+ 
+  tasks:
+    - name: Get MAC Addresses
+      debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
