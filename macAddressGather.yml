@@ -8,4 +8,6 @@
   tasks:
     - name: Get MAC Addresses
 #      debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
-      debug: msg="{{ hostvars[inventory_hostname] }}"
+#      debug: msg="{{ hostvars[inventory_hostname] }}"
+      debug:
+        msg: "{{ ansible_interfaces | difference(['lo']) | map('regex_replace', '^(.*)$', 'ansible_\\1' ) | map('extract', hostvars[inventory_hostname], 'macaddress')  | list }}"
