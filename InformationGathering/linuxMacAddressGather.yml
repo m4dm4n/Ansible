@@ -6,6 +6,17 @@
     ansible_ssh_retries: 3
  
   tasks:
+
+    - name: Get Bluetooth MAC address in linux hosts
+      shell: hciconfig | grep -i address | awk '{print $3}'
+      register: bluetooth_mac_address
+      ignore_errors: yes
+
+    - name: Show Bluetooth MAC address
+      debug:
+        msg: "{{ bluetooth_mac_address.stdout_lines }}"    
+
+
     - name: Get MAC Addresses
 #      debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
 #      debug: msg="{{ hostvars[inventory_hostname] }}"
