@@ -1,0 +1,29 @@
+#file: winConfigureGen3_OS.yml
+---
+- hosts: all
+  gather_facts: yes
+
+  vars:
+    server: "\\\\SOMESERVER\\SHARENAME"
+    share_user: "SOMEUSER"
+    share_pass: "SOMEPASSWORD"
+
+  tasks:
+
+
+  - name: Create Temp directory
+    win_file:
+     path: C:\Temp
+     state: directory
+
+  - name: Copy VMWare installation file to temp directory
+    win_copy:
+      src: {{ server }}\VMware-workstation-INSTALL.exe
+      dest: C:\Temp\VMware-workstation-INSTALL.exe
+      remote_src: yes
+    become: yes
+    become_method: runas
+    become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+    vars:
+      ansible_become_user: "{{ share_user }}"
+      ansible_become_pass: "{{ share_pass }}"
