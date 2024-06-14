@@ -1,0 +1,38 @@
+---
+- hosts: all
+  vars:
+    ansible_user: "admin"
+    ansible_password: "admin"
+    win_share_user: "deploy"
+    win_share_password: "Tsrb_1234"
+    ansible_port: 22
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    ansible_ssh_retries: 3
+#    ansible_shell_type: powershell
+#    ansible_shell_type: cmd
+#    ansible_become_method: runas
+#    ansible_become_user: "{{ ansible_user }}"
+ 
+  tasks:
+    # create directory /tmp/share
+    - name: Create /tmp/share directory
+      file:
+        path: /tmp/share
+        state: directory
+
+    # mount the share //server with cifs type, and username and password options, mount it in folder /tmp/share
+    - name: Mount the share
+      mount:
+        path: /tmp/share
+        src: //192.168.100.5/winimages
+        fstype: cifs
+        opts: username={{ win_share_user }},password={{ win_share_password }}
+        state: mounted
+
+    # call Festo deployment script
+    - name: Run Festo deployment script
+      command: /tmp/share/Scripts/deployment/Festo/festoPC03Deployment.sh
+      become: yes
+    #  become_user: ubuntu
+      become_method: sudo
+      ignore_errors: yes

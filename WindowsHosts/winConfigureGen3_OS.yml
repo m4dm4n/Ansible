@@ -18,7 +18,7 @@
 
   - name: Copy VMWare installation file to temp directory
     win_copy:
-      src: {{ server }}\VMware-workstation-INSTALL.exe
+      src: "{{ server }}\\VMware-workstation-INSTALL.exe"
       dest: C:\Temp\VMware-workstation-INSTALL.exe
       remote_src: yes
     become: yes
