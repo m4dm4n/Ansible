@@ -28,6 +28,7 @@
         fstype: cifs
         opts: username={{ win_share_user }},password={{ win_share_password }}
         state: mounted
+      become: yes
       become_method: sudo
 #      ignore_errors: yes
 
