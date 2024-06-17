@@ -1,8 +1,8 @@
 ---
 - hosts: all
   vars:
-    ansible_user: "admin"
-    ansible_password: "admin"
+    ansible_user: "ubuntu"
+#    ansible_password: "admin"
     win_share_user: "deploy"
     win_share_password: "Tsrb_1234"
     ansible_port: 22
