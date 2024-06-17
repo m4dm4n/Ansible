@@ -28,6 +28,8 @@
         fstype: cifs
         opts: username={{ win_share_user }},password={{ win_share_password }}
         state: mounted
+      become_method: sudo
+#      ignore_errors: yes
 
     # call Festo deployment script
     - name: Run Festo deployment script
