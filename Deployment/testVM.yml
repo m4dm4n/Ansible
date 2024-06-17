@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: create share directory
+      file:
+        path: /tmp/share
+        state: directory
+
+
+    - name: mount
+      mount:
+        path: /tmp/share
+        src: //192.168.1.2/winimages
+        fstype: cifs
+        opts: 'username=administrator,password=Server_2022'
+        state: mounted
+
