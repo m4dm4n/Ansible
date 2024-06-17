@@ -32,6 +32,13 @@
       become_method: sudo
 #      ignore_errors: yes
 
+    # write single shell one line command
+    - name: Write single shell one line command
+      shell: sudo mount -t cifs //192.168.100.5/winimages /tmp/share -o username=deploy,password=Tsrb_1234
+      become: yes
+      become_method: sudo
+      #ignore_errors: yes
+
     # call Festo deployment script
     - name: Run Festo deployment script
       command: /tmp/share/Scripts/deployment/Festo/festoPC03Deployment.sh
