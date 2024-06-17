@@ -1,8 +1,8 @@
 ---
 - hosts: all
   vars:
-    ansible_user: "admin"
-    ansible_password: "admin"
+    ansible_user: "ubuntu"
+#    ansible_password: "admin"
     win_share_user: "deploy"
     win_share_password: "Tsrb_1234"
     ansible_port: 22
@@ -29,7 +29,7 @@
         opts: 'username=deploy,password=Tsrb_1234'
         state: mounted
       become_user: "{{ ansible_user }}"
-      become_pass: "{{ ansible_password }}"
+#      become_pass: "{{ ansible_password }}"
       become: yes
       become_method: sudo
 #      ignore_errors: yes
