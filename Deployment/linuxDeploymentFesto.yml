@@ -21,23 +21,16 @@
         state: directory
 
     # mount the share //server with cifs type, and username and password options, mount it in folder /tmp/share
-   # - name: Mount the share
-   #   mount:
-   #     path: /tmp/share
-   #     src: //192.168.100.5/winimages
-   #     fstype: cifs
-   #     opts: username={{ win_share_user }},password={{ win_share_password }}
-   #     state: mounted
-   #   become: yes
-   #   become_method: sudo
-#      ignore_errors: yes
-
-    # write single shell one line command
-    - name: Write single shell one line command
-      shell: sudo mount -t cifs //192.168.100.5/winimages /tmp/share -o username=deploy,password=Tsrb_1234
+    - name: Mount the share
+      mount:
+        path: /tmp/share
+        src: //192.168.100.5/winimages
+        fstype: cifs
+        opts: 'username=deploy,password=Tsrb_1234'
+        state: mounted
       become: yes
       become_method: sudo
-      #ignore_errors: yes
+#      ignore_errors: yes
 
     # call Festo deployment script
     - name: Run Festo deployment script
