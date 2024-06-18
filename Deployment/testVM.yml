@@ -22,4 +22,7 @@
         fstype: cifs
         opts: 'username=test,password=test'
         state: mounted
+      become: yes
+      become_user: admin
+      become_method: sudo
 
