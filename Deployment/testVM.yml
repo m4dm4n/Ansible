@@ -1,7 +1,7 @@
 ---
 
 - hosts: all
-#  become: yes
+  become: yes
   vars:
      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
@@ -13,11 +13,11 @@
         state: directory
 
 
-   # - name: mount
-   #   mount:
-   #     path: /tmp/share
-   #     src: //192.168.1.2/winimages
-   #     fstype: cifs
-   #     opts: 'username=administrator,password=Server_2022'
-   #     state: mounted
+    - name: mount
+      mount:
+        path: /tmp/share
+        src: //192.168.1.19/winimages
+        fstype: cifs
+        opts: 'username=test,password=test'
+        state: mounted
 
