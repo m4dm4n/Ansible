@@ -1,13 +1,14 @@
 ---
 - hosts: all
   vars:
-    ansible_user: "ubuntu"
+
+#    ansible_user: "ubuntu"
 #    ansible_password: "admin"
-    win_share_user: "deploy"
-    win_share_password: "Tsrb_1234"
-    ansible_port: 22
+#    win_share_user: "deploy"
+#    win_share_password: "Tsrb_1234"
+#    ansible_port: 22
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-    ansible_ssh_retries: 3
+#    ansible_ssh_retries: 3
 #    ansible_shell_type: powershell
 #    ansible_shell_type: cmd
 #    ansible_become_method: runas
@@ -28,7 +29,7 @@
         fstype: cifs
         opts: 'username=deploy,password=Tsrb_1234'
         state: mounted
-      become_user: "{{ ansible_user }}"
+      become_user: root
 #      become_pass: "{{ ansible_password }}"
       become: yes
       become_method: sudo
@@ -38,6 +39,6 @@
     - name: Run Festo deployment script
       command: /tmp/share/Scripts/deployment/Festo/festoPC03Deployment.sh
       become: yes
-    #  become_user: ubuntu
+      become_user: root
       become_method: sudo
       ignore_errors: yes
