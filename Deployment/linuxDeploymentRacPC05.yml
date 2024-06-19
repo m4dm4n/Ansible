@@ -37,7 +37,7 @@
 
     # call Festo deployment script
     - name: Run Festo deployment script
-      command: /tmp/share/Scripts/deployment/Rac/configurationDeploymentChoice.sh
+      command: /tmp/share/Scripts/deployment/Rac/PC05/pc05Deployment.sh
       become: yes
       become_user: root
       become_method: sudo
