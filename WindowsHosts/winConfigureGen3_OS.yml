@@ -27,3 +27,20 @@
     vars:
       ansible_become_user: "{{ share_user }}"
       ansible_become_pass: "{{ share_pass }}"
+
+# install vmware workstation
+
+# install some powershell modules
+
+# load those powershell modules
+
+# format required partition
+
+# create vmware workstation folder on partition
+
+# copy base virtual machines
+
+# clone those machines
+
+# check some extra configuration options
+
